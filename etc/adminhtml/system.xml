@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Representation of Webapi module in System Configuration (Magento admin panel).
+ *
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="webapi" translate="label" type="text" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="experius_api_extend" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Experius - API Extend</label>
+                <group id="sales_order" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SalesOrderRepository</label>
+                    <field id="customer_attributes" translate="label comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Dynamic Customer Attributes</label>
+                        <comment>Dynamically add additional customer data to salesOrderRepository extension_attributes. The attributes will be prefixed in the API with customer_</comment>
+                        <source_model>Experius\ApiExtend\Model\Source\Customer\Attributes</source_model>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>
