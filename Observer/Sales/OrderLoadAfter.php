@@ -8,13 +8,17 @@ class OrderLoadAfter implements \Magento\Framework\Event\ObserverInterface
 
     protected $_customerRepositoryInterface;
 
+    protected $eavConfig;
+
     protected $helper;
 
     public function __construct(
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
+        \Magento\Eav\Model\Config $eavConfig,
         \Experius\ApiExtend\Helper\Data $helper
     ) {
         $this->helper = $helper;
+        $this->eavConfig = $eavConfig;
         $this->_customerRepositoryInterface = $customerRepositoryInterface;
     }
 
@@ -37,13 +41,20 @@ class OrderLoadAfter implements \Magento\Framework\Event\ObserverInterface
             $customer = $this->_customerRepositoryInterface->getById($customerId);
             $customerAttributes = $this->helper->getSalesOrderCustomerAttributes();
             if (!empty($customerAttributes)) {
-                foreach ($customerAttributes as $attribute) {
-                    if (isset($attribute) && $attribute) {
-                        if ($customer->getCustomAttribute($attribute)) {
-                            $value = $customer->getCustomAttribute($attribute)->getValue();
+                foreach ($customerAttributes as $attributeCode) {
+                    if (isset($attributeCode) && $attributeCode) {
+                        if ($customer->getCustomAttribute($attributeCode)) {
+                            $value = $customer->getCustomAttribute($attributeCode)->getValue();
+                        }
+                        if (isset($value)) {
+                            $attribute = $this->eavConfig->getAttribute('customer', $attributeCode);
+                            if (in_array($attribute->getFrontendInput(), ['multiselect', 'select'])) {
+                                $value = $attribute->getSource()->getOptionText($value);
+                            }
                         }
                         $value = (isset($value)) ? $value : '';
-                        $extensionAttributes->setData('customer_' . $attribute, $value);
+                        $extensionAttributes->setData('customer_' . $attributeCode, $value);
+                        unset($value);
                     }
                 }
             }

@@ -18,6 +18,12 @@ Extend the API of Magento 2
 
 # Change log
 
+Version 1.0.1 - May. 26, 2017 | Lewis Voncken
+
+ * Get Option Value label for multiselect and select Customer Attribute
+
+---
+
 Version 1.0.0 - May. 25, 2017 | Lewis Voncken
 
  * Initial Commit
