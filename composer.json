@@ -1,7 +1,7 @@
 {
     "name": "experius/module-apiextend",
-    "description": "Extend the API of Magento 2",
-    "license": "proprietary",
+    "description": "",
+    "license": "OSL-3.0",
     "authors": [
         {
             "name": "Lewis Voncken",
@@ -11,11 +11,11 @@
     "minimum-stability": "dev",
     "require": {},
     "autoload": {
-        "files": [
-            "registration.php"
-        ],
         "psr-4": {
             "Experius\\ApiExtend\\": ""
-        }
+        },
+        "files": [
+            "registration.php"
+        ]
     }
 }

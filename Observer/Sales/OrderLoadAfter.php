@@ -1,17 +1,40 @@
 <?php
-
+/**
+ * A Magento 2 module named Experius/ApiExtend
+ * Copyright (C) 2017 Lewis Voncken
+ *
+ * This file included in Experius/ApiExtend is licensed under OSL 3.0
+ *
+ * http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * Please see LICENSE.txt for the full text of the OSL 3.0 license
+ */
 
 namespace Experius\ApiExtend\Observer\Sales;
 
 class OrderLoadAfter implements \Magento\Framework\Event\ObserverInterface
 {
 
+    /**
+     * @var \Magento\Customer\Api\CustomerRepositoryInterface
+     */
     protected $_customerRepositoryInterface;
 
+    /**
+     * @var \Magento\Eav\Model\Config
+     */
     protected $eavConfig;
 
+    /**
+     * @var \Experius\ApiExtend\Helper\Data
+     */
     protected $helper;
 
+    /**
+     * OrderLoadAfter constructor.
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface
+     * @param \Magento\Eav\Model\Config $eavConfig
+     * @param \Experius\ApiExtend\Helper\Data $helper
+     */
     public function __construct(
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         \Magento\Eav\Model\Config $eavConfig,

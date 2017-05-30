@@ -18,6 +18,15 @@ Extend the API of Magento 2
 
 # Change log
 
+Version 1.1.0 - May. 30, 2017 | Lewis Voncken
+
+ * Added License and add functionality to pass store code as param in Swagger
+	example: ?store=default
+   If param is not set all is used
+
+---
+
+
 Version 1.0.1 - May. 26, 2017 | Lewis Voncken
 
  * Get Option Value label for multiselect and select Customer Attribute

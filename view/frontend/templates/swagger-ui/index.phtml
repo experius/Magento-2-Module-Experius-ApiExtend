@@ -1,0 +1,27 @@
+<?php
+/**
+ * A Magento 2 module named Experius/ApiExtend
+ * Copyright (C) 2017 Lewis Voncken
+ *
+ * This file included in Experius/ApiExtend is licensed under OSL 3.0
+ *
+ * http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * Please see LICENSE.txt for the full text of the OSL 3.0 license
+ */
+
+$schemaUrl = rtrim($block->getBaseUrl(), '/') . '/rest/' . $this->helper('Experius\ApiExtend\Helper\Data')->getParamStore() . '/schema?services=all';
+?>
+
+<div id='header'>
+    <div class="swagger-ui-wrap">
+        <a id="logo" href="http://swagger.io">swagger</a>
+        <form id='api_selector'>
+            <input id="input_baseUrl" type="hidden" value="<?php /* @escapeNotVerified */ echo $schemaUrl ?>"/>
+            <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
+            <div class='input'><a id="explore" href="#" data-sw-translate>apply</a></div>
+        </form>
+    </div>
+</div>
+
+<div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
+<div id="swagger-ui-container" class="swagger-ui-wrap"></div>
