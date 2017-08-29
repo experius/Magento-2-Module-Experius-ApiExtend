@@ -81,7 +81,12 @@ class OrderRepository
                         if (isset($value)) {
                             $attribute = $this->eavConfig->getAttribute('customer', $attributeCode);
                             if (in_array($attribute->getFrontendInput(), ['multiselect', 'select'])) {
-                                $value = $attribute->getSource()->getOptionText($value);
+                                foreach ($attribute->getSource()->getAllOptions() as $option) {
+                                    if (isset($option['value']) && $option['value'] == $value) {
+                                        $value = isset($option['label']) ? $option['label'] : $option['value'];
+                                        break;
+                                    }
+                                }
                             }
                         }
                         $value = (isset($value)) ? $value : '';
