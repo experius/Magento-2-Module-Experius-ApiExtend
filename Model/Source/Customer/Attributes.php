@@ -11,20 +11,23 @@
 
 namespace Experius\ApiExtend\Model\Source\Customer;
 
+use Magento\Customer\Model\ResourceModel\Attribute\CollectionFactory;
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
-class Attributes extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource {
+class Attributes extends AbstractSource
+{
 
     /**
-     * @var \Magento\Customer\Model\ResourceModel\Attribute\CollectionFactory
+     * @var CollectionFactory
      */
-    protected $attributesFactory;
+    protected CollectionFactory $attributesFactory;
 
     /**
      * Attributes constructor.
-     * @param \Magento\Customer\Model\ResourceModel\Attribute\CollectionFactory $attributesFactory
+     * @param CollectionFactory $attributesFactory
      */
     public function __construct(
-        \Magento\Customer\Model\ResourceModel\Attribute\CollectionFactory $attributesFactory
+        CollectionFactory $attributesFactory
     ) {
         $this->attributesFactory = $attributesFactory;
     }
@@ -34,8 +37,7 @@ class Attributes extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSour
      */
     public function getAllOptions()
     {
-
-        $options = array();
+        $options = [];
 
         $attributeCollection = $this->attributesFactory->create();
         $attributeCollection->addSystemHiddenFilter()->addExcludeHiddenFrontendFilter();
@@ -43,7 +45,7 @@ class Attributes extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSour
         foreach ($attributeCollection as $attribute) {
             $attributeCode = $attribute->getAttributeCode();
             $attributeLabel = $attribute->getFrontendLabel();
-            $options[] = array('value' => $attributeCode, 'label'=> $attributeLabel);
+            $options[] = ['value' => $attributeCode, 'label' => $attributeLabel];
         }
 
         return $options;

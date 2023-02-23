@@ -11,34 +11,45 @@
 
 namespace Experius\ApiExtend\Plugin\Magento\Sales\Model;
 
+use Experius\ApiExtend\Helper\Data;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Eav\Model\Config;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Api\Data\OrderExtension;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\ResourceModel\Order\Collection;
+
 class OrderRepository
 {
 
     /**
-     * @var \Magento\Customer\Api\CustomerRepositoryInterface
+     * @var CustomerRepositoryInterface
      */
-    protected $_customerRepositoryInterface;
+    protected CustomerRepositoryInterface $_customerRepositoryInterface;
 
     /**
-     * @var \Magento\Eav\Model\Config
+     * @var Config
      */
-    protected $eavConfig;
+    protected Config $eavConfig;
 
     /**
-     * @var \Experius\ApiExtend\Helper\Data
+     * @var Data
      */
-    protected $helper;
+    protected Data $helper;
 
     /**
      * OrderLoadAfter constructor.
-     * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface
-     * @param \Magento\Eav\Model\Config $eavConfig
-     * @param \Experius\ApiExtend\Helper\Data $helper
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
+     * @param Config $eavConfig
+     * @param Data $helper
      */
     public function __construct(
-        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
-        \Magento\Eav\Model\Config $eavConfig,
-        \Experius\ApiExtend\Helper\Data $helper
+        CustomerRepositoryInterface $customerRepositoryInterface,
+        Config                      $eavConfig,
+        Data                        $helper
     ) {
         $this->helper = $helper;
         $this->eavConfig = $eavConfig;
@@ -46,22 +57,43 @@ class OrderRepository
     }
 
     /**
+     * @param OrderRepositoryInterface $subject
+     * @param Collection $resultOrder
+     * @return Collection
+     */
+    public function afterGetList(
+        OrderRepositoryInterface $subject,
+        Collection               $resultOrder
+    ) {
+        foreach ($resultOrder->getItems() as $order) {
+            $this->afterGet($subject, $order);
+        }
+        return $resultOrder;
+    }
+
+    /**
      * Get gift message
      *
-     * @param \Magento\Sales\Api\OrderRepositoryInterface $subject
-     * @param \Magento\Sales\Api\Data\OrderInterface $resultOrder
-     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @param OrderRepositoryInterface $subject
+     * @param OrderInterface $resultOrder
+     * @return OrderInterface
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterGet(
-        \Magento\Sales\Api\OrderRepositoryInterface $subject,
-        \Magento\Sales\Api\Data\OrderInterface $resultOrder
+        OrderRepositoryInterface $subject,
+        OrderInterface           $resultOrder
     ) {
         $resultOrder = $this->getExtraExtensionAttributes($resultOrder);
 
         return $resultOrder;
     }
 
+    /**
+     * @param $order
+     * @return mixed
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
     public function getExtraExtensionAttributes($order)
     {
         $extensionAttributes = $order->getExtensionAttributes();
@@ -100,21 +132,14 @@ class OrderRepository
         return $order;
     }
 
+    /**
+     * @return OrderExtension|mixed
+     */
     private function getOrderExtensionDependency()
     {
-        $orderExtension = \Magento\Framework\App\ObjectManager::getInstance()->get(
-            '\Magento\Sales\Api\Data\OrderExtension'
+        $orderExtension = ObjectManager::getInstance()->get(
+            OrderExtension::class
         );
         return $orderExtension;
-    }
-
-    public function afterGetList(
-        \Magento\Sales\Api\OrderRepositoryInterface $subject,
-        \Magento\Sales\Model\ResourceModel\Order\Collection $resultOrder
-    ) {
-        foreach ($resultOrder->getItems() as $order) {
-            $this->afterGet($subject, $order);
-        }
-        return $resultOrder;
     }
 }

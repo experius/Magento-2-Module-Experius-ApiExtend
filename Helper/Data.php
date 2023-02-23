@@ -11,57 +11,63 @@
 
 namespace Experius\ApiExtend\Helper;
 
-use Magento\Framework\DataObject;
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\Request\Http;
+use Magento\Store\Model\ScopeInterface;
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper
+class Data extends AbstractHelper
 {
 
     /**
-     * @var \Magento\Framework\App\Request\Http
+     * @var Http
      */
-    protected $request;
+    protected Http $request;
 
     /**
      * Data constructor.
-     * @param \Magento\Framework\App\Helper\Context $context
-     * @param \Magento\Framework\App\Request\Http $request
+     * @param Context $context
+     * @param Http $request
      */
     public function __construct(
-        \Magento\Framework\App\Helper\Context $context,
-        \Magento\Framework\App\Request\Http $request
+        Context $context,
+        Http $request
     ) {
         $this->request = $request;
         parent::__construct($context);
     }
 
     /**
-     * @param bool $field
-     * @param bool $group
-     * @param bool $section
+     * @param string $field
+     * @param string $group
+     * @param string $section
      * @return mixed
      */
-    public function getModuleConfig($field = false, $group = false, $section = false)
-    {
-        $section = ($section) ? $section : 'webapi';
-        $group = ($group) ?  $group : 'experius_api_extend';
-        $field = ($field) ? $field : 'enabled';
-        return $this->scopeConfig->getValue("{$section}/{$group}/{$field}", \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    public function getModuleConfig(
+        $field = 'enabled',
+        $group = 'experius_api_extend',
+        $section = 'webapi'
+    ): mixed {
+        return $this->scopeConfig->getValue("{$section}/{$group}/{$field}", ScopeInterface::SCOPE_STORE);
     }
 
     /**
      * @return array
      */
-    public function getSalesOrderCustomerAttributes()
+    public function getSalesOrderCustomerAttributes(): array
     {
         $group = "experius_api_extend/sales_order";
-        return explode(',', $this->getModuleConfig("customer_attributes", $group));
+        if ($customerAttributes = $this->getModuleConfig("customer_attributes", $group)) {
+            return explode(',', $customerAttributes);
+        }
+        return [];
     }
 
     /**
      * @return mixed|string
      */
-    public function getParamStore()
+    public function getParamStore(): mixed
     {
-        return ($this->request->getParam('store')) ? $this->request->getParam('store') : 'all';
+        return $this->request->getParam('store') ?: 'all';
     }
 }
